@@ -95,24 +95,27 @@ class MessageList extends Component {
 
     const message = new Message({
       from : "gavin.id",
-      content : "I love miumiu",
+      content : "I love Blockstack",
       flag: true
     });
-
-
-
+    const handleQuery = async() =>{
+      //const fetchMessage = await Message.findById("f3734d92afe7-4a85-afab-ba0c9db01fc3")
+      const fetchMessages = await Message.fetchList({flag : false});
+      //console.log(fetchMessage)
+      console.log(fetchMessages)
+    }
     const handleSave = async () =>{
       await message.save()
     }
     const handleUpdate = async() =>{
       const newAttributes = {
         from: "gavin.id",
-        content: "I love qiuqiu",
+        content: "I love Blockstack V2",
         flag: false
-
       }
       await message.update(newAttributes)
     }
+
     return (
       <div>
 
@@ -148,7 +151,7 @@ class MessageList extends Component {
         <br/>
         <br/>
         <p>radiks db operation</p>
-        <Button  variant="contained" onClick={this.handleQuery}>
+        <Button  variant="contained" onClick={handleQuery}>
             query
         </Button>
         <Button  variant="contained" onClick={handleSave}>
