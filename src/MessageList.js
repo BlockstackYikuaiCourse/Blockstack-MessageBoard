@@ -7,7 +7,9 @@ import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import Message from './models/Message.js'
 import TextField from '@material-ui/core/TextField';
-import { User, getConfig } from 'radiks';
+import { User, getConfig } from 'radiks-gavin-test';
+
+import UserGroupRecords from './models/UserGroupRecords.js'
 
 const styles = {
   center:{
@@ -36,7 +38,7 @@ class MessageList extends Component {
   constructor(props) {
   	super(props);
     this.state = {
-      value:null,
+      value:"",
       messageList:[],
       isLoading:true
     }
@@ -46,7 +48,8 @@ class MessageList extends Component {
     const attributes = {
       from: User.currentUser()._id,
       content: this.state.value,
-      flag: true
+      flag: true,
+      //userGroupId:"4b24a0d0fcdf-40a2-a735-a3e0cbd4a002"
     }
     console.log(attributes)
     const message = new Message(attributes);
@@ -62,6 +65,7 @@ class MessageList extends Component {
 
   handleQuery = async () =>{
       console.log("in")
+      this.state.messageList = []
       //const debugMessage = await Message.findById('2f8e22079444-454b-9e77-5e461232cdd9');
       const fetchMessages = await Message.fetchList({flag : true});
       console.log(fetchMessages)
@@ -99,10 +103,11 @@ class MessageList extends Component {
       flag: true
     });
     const handleQuery = async() =>{
-      //const fetchMessage = await Message.findById("f3734d92afe7-4a85-afab-ba0c9db01fc3")
-      const fetchMessages = await Message.fetchList({flag : false});
-      //console.log(fetchMessage)
-      console.log(fetchMessages)
+      console.log("in1")
+      const fetchMessage = await Message.findById("f3734d92afe7-4a85-afab-ba0c9db01fc3")
+      //const fetchMessages = await Message.fetchList({flag : false});
+      console.log(fetchMessage)
+      //console.log(fetchMessages)
     }
     const handleSave = async () =>{
       await message.save()
@@ -114,6 +119,13 @@ class MessageList extends Component {
         flag: false
       }
       await message.update(newAttributes)
+    }
+
+    const handleUserGroupRecordsUpdate = async() =>{
+      //const fetchMessage = await Message.findById("f3734d92afe7-4a85-afab-ba0c9db01fc3")
+      const fetchMessages = await UserGroupRecords.fetchList();
+      //console.log(fetchMessage)
+      console.log(fetchMessages)
     }
 
     return (
@@ -159,6 +171,9 @@ class MessageList extends Component {
         </Button>
         <Button  variant="contained" onClick={handleUpdate}>
             update
+        </Button>
+        <Button  variant="contained" onClick={handleUserGroupRecordsUpdate}>
+            UserGroupUpdate
         </Button>
       </div>
   );
