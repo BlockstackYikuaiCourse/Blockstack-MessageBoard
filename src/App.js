@@ -3,9 +3,8 @@ import Profile from './Profile.js';
 import Signin from './Signin.js';
 import Message from './MessageList.js'
 import UserGroupList from './UserGroupList.js'
-
 import Button from '@material-ui/core/Button';
-
+import {connect} from 'react-redux'
 import {
   UserSession,
   AppConfig
@@ -23,7 +22,7 @@ configure({
 });
 
 
-export default class App extends Component {
+class App extends Component {
 
   constructor(){
     super()
@@ -49,8 +48,8 @@ export default class App extends Component {
             </div>
             :
             <div className="site-wrapper-inner">
-              <UserGroupList/>
-              <Message/>
+              <UserGroupList />
+              <Message />
             </div>
               //<Profile userSession={userSession} handleSignOut={ this.handleSignOut } />
           }
@@ -64,7 +63,7 @@ export default class App extends Component {
     const { userSession } = getConfig();
     console.log(userSession)
     if (userSession.isSignInPending()) {
-      console.log("in")
+      console.log("in 1")
       await userSession.handlePendingSignIn().then((userData) => {
         window.history.replaceState({}, document.title, "/")
         this.setState({ userData: userData})
@@ -74,10 +73,14 @@ export default class App extends Component {
     }
     /*
     else if(userSession.isUserSignedIn()){
+      console.log("in 2")
       const currentUser = await User.createWithCurrentUser();
       console.log("2",currentUser)
     }
     */
-
+    console.log(this.props)
   }
 }
+
+
+export default connect()(App)

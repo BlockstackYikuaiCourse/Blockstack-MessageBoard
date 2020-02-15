@@ -6,9 +6,10 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import Message from './models/Message.js'
+import Test from './models/Test.js'
 import TextField from '@material-ui/core/TextField';
 import { User, getConfig } from 'radiks-gavin-test';
-
+import {connect} from 'react-redux'
 import UserGroupRecords from './models/UserGroupRecords.js'
 
 const styles = {
@@ -32,6 +33,7 @@ const styles = {
   }
 };
 
+let groupSelectedId = ""
 
 class MessageList extends Component {
 
@@ -40,7 +42,8 @@ class MessageList extends Component {
     this.state = {
       value:"",
       messageList:[],
-      isLoading:true
+      isLoading:true,
+      verbose:false
     }
   }
 
@@ -48,8 +51,7 @@ class MessageList extends Component {
     const attributes = {
       from: User.currentUser()._id,
       content: this.state.value,
-      flag: true,
-      //userGroupId:"4b24a0d0fcdf-40a2-a735-a3e0cbd4a002"
+      userGroupId:groupSelectedId
     }
     console.log(attributes)
     const message = new Message(attributes);
@@ -67,7 +69,8 @@ class MessageList extends Component {
       console.log("in")
       this.state.messageList = []
       //const debugMessage = await Message.findById('2f8e22079444-454b-9e77-5e461232cdd9');
-      const fetchMessages = await Message.fetchList({flag : true});
+      //{userGroupId : "a41d22cdac15-47fa-80d1-5c382325c35a"}
+      const fetchMessages = await Message.fetchList({});
       console.log(fetchMessages)
       fetchMessages.forEach((item) => {
           console.log(item)
@@ -78,13 +81,13 @@ class MessageList extends Component {
               this.state.messageList.push({
                   from: item.attrs.from,
                   content: item.attrs.content,
-                  flag : item.attrs.flag
+                  userGroupId: item.attrs.userGroupId
               })
             }else {//密文数据
               this.state.messageList.push({
                   from: item.attrs.from.cipherText,
                   content: item.attrs.content.cipherText,
-                  flag : item.attrs.flag
+                  userGroupId:item.attrs.userGroupId
               })
             }
           }
@@ -97,10 +100,9 @@ class MessageList extends Component {
   render() {
     const { classes } = this.props;
 
-    const message = new Message({
-      from : "gavin.id",
+    const test = new Test({
       content : "I love Blockstack",
-      flag: true
+      flag : true
     });
     const handleQuery = async() =>{
       console.log("in1")
@@ -110,15 +112,14 @@ class MessageList extends Component {
       //console.log(fetchMessages)
     }
     const handleSave = async () =>{
-      await message.save()
+      await test.save()
     }
     const handleUpdate = async() =>{
       const newAttributes = {
         from: "gavin.id",
-        content: "I love Blockstack V2",
-        flag: false
+        content: "I love Blockstack V2"
       }
-      await message.update(newAttributes)
+      await test.update(newAttributes)
     }
 
     const handleUserGroupRecordsUpdate = async() =>{
@@ -159,22 +160,23 @@ class MessageList extends Component {
             })}
           </div>
         }
-
-        <br/>
-        <br/>
-        <p>radiks db operation</p>
-        <Button  variant="contained" onClick={handleQuery}>
-            query
-        </Button>
-        <Button  variant="contained" onClick={handleSave}>
-            save
-        </Button>
-        <Button  variant="contained" onClick={handleUpdate}>
-            update
-        </Button>
-        <Button  variant="contained" onClick={handleUserGroupRecordsUpdate}>
-            UserGroupUpdate
-        </Button>
+        { this.state.verbose?
+        <div>
+          <p>radiks db operation</p>
+          <Button  variant="contained" onClick={handleQuery}>
+              query
+          </Button>
+          <Button  variant="contained" onClick={handleSave}>
+              save
+          </Button>
+          <Button  variant="contained" onClick={handleUpdate}>
+              update
+          </Button>
+          <Button  variant="contained" onClick={handleUserGroupRecordsUpdate}>
+              UserGroupUpdate
+          </Button>
+        </div> : <div></div>
+        }
       </div>
   );
   }
@@ -183,4 +185,11 @@ class MessageList extends Component {
   }
 }
 
-export default withStyles(styles)(MessageList);
+function getVal(state){
+  console.log(state)
+  groupSelectedId = state.groupIdSelectedVal
+  console.log(groupSelectedId)
+  return{}
+}
+
+export default connect(getVal)(withStyles(styles)(MessageList));
