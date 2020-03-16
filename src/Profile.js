@@ -31,8 +31,8 @@ export default class Profile extends Component {
         <div className="avatar-section">
           <img src={ person.avatarUrl() ? person.avatarUrl() : avatarFallbackImage } className="img-rounded avatar" id="avatar-image" alt=""/>
         </div>
-        <h1>Hello, <span id="heading-name">{ person.name() ? person.name() : 'Nameless Person' }</span>!</h1>
-        <h1>Description: <span id="heading-name">{ person.description() ? person.description() : 'Nothing' }</span>!</h1>
+        <h1>你好, <span id="heading-name">{ person.name() ? person.name() : 'Nameless Person' }</span>!</h1>
+        <h1>个人简介: <span id="heading-name">{ person.description() ? person.description() : 'Nothing' }</span>!</h1>
         <p className="lead">
           <button
             className="btn btn-primary btn-lg"
