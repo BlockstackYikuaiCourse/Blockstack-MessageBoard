@@ -12,6 +12,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "@material-ui/core": "^4.9.5",
     "blockstack": "^19.2.5",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
