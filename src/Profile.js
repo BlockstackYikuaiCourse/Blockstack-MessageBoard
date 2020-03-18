@@ -2,10 +2,23 @@ import React, { Component } from 'react';
 import {
   Person,
 } from 'blockstack';
-
+import TextField from '@material-ui/core/TextField';
+import { withStyles } from '@material-ui/core/styles';
+import Divider from '@material-ui/core/Divider';
+import Grid from '@material-ui/core/Grid';
 const avatarFallbackImage = 'https://s3.amazonaws.com/onename/avatar-placeholder.png';
 
-export default class Profile extends Component {
+const useStyles = theme => ({
+  root: {
+    width : "100%"
+  },
+  container : {
+    maxWidth : 600
+  }
+});
+
+
+class Profile extends Component {
   constructor(props) {
   	super(props);
 
@@ -21,6 +34,7 @@ export default class Profile extends Component {
       newStatus:"",
       status:""
   	};
+
   }
   saveNewStatus(statusText) {
      const { userSession } = this.props
@@ -66,41 +80,55 @@ export default class Profile extends Component {
   render() {
     const { handleSignOut, userSession } = this.props;
     const { person } = this.state;
-    console.log(person)
+    const { classes } = this.props;
     return (
       !userSession.isSignInPending() ?
-      <div className="panel-welcome" id="section-2">
-        <div className="avatar-section">
-          <img src={ person.avatarUrl() ? person.avatarUrl() : avatarFallbackImage } className="img-rounded avatar" id="avatar-image" alt=""/>
-        </div>
-        <p>Hello, <span id="heading-name">{ person.name() ? person.name() : 'Nameless Person' }</span>!</p>
-        <p className="lead">
-          <button
-            className="btn btn-primary btn-lg"
-            id="signout-button"
-            onClick={ handleSignOut.bind(this) }
-          >
-            Logout
-          </button>
-        </p>
-        <br/>
-        <br/>
-        <textarea className="input-status"
-                 value={this.state.newStatus}
-                 onChange={e => this.handleNewStatusChange(e)}
-                 placeholder="输入状态"
-               />
-        <br/>
-
-        <button
-                 className="btn btn-primary btn-lg"
-                 onClick={e => this.handleNewStatusSubmit(e)}
+        <Grid container className={classes.root} justify="center">
+          <Grid container className={classes.container} spacing={2}>
+            <Grid item xs={12}>
+              <div className="avatar-section">
+                <img src={ person.avatarUrl() ? person.avatarUrl() : avatarFallbackImage } className="img-rounded avatar" id="avatar-image" alt=""/>
+              </div>
+            </Grid>
+            <Grid item xs={12}>
+              <p>Hello, <span id="heading-name">{ person.name() ? person.name() : 'Nameless Person' }</span>!</p>
+            </Grid>
+            <Grid item xs={12}>
+              <p className="lead">
+                <button
+                  className="btn btn-primary btn-lg"
+                  id="signout-button"
+                  onClick={ handleSignOut.bind(this) }
                 >
-                提交
-        </button>
-        <p>  status is: {this.state.status.text}</p>
+                  Logout
+                </button>
+              </p>
+              <Divider />
+            </Grid>
 
-      </div> : null
+            <Grid item xs={12}>
+              <TextField
+               id="outlined-multiline-static"
+               label="Multiline"
+               multiline
+               rows="4"
+               value={this.state.newStatus}
+               onChange={e => this.handleNewStatusChange(e)}
+               placeholder="输入状态"
+               />
+               <button
+                        className="btn btn-primary btn-lg"
+                        onClick={e => this.handleNewStatusSubmit(e)}
+                       >
+                       提交
+               </button>
+            </Grid>
+            <Grid item xs={12}>
+               <p>  status is: {this.state.status.text}</p>
+            </Grid>
+          </Grid>
+        </Grid>
+      : null
     );
   }
   componentDidMount() {
@@ -113,3 +141,5 @@ export default class Profile extends Component {
     });
   }
 }
+
+export default withStyles(useStyles)(Profile);
