@@ -6,6 +6,7 @@ export default class Message extends Model {
   static schema = {
     from: String,
     content: String,
+    groupName: String,
     userGroupId: {
       type: String,
       decrypted: true,
