@@ -55,7 +55,6 @@ class MessageList extends Component {
       groupName: ""
     }
     const fetchMessages = await UserGroupRecords.fetchList();
-      console.log("cyd fetchMessages")
       console.log(fetchMessages)
       fetchMessages.forEach((item) => {
           console.log(item)
