@@ -51,8 +51,20 @@ class MessageList extends Component {
     const attributes = {
       from: User.currentUser()._id,
       content: this.state.value,
-      userGroupId:groupSelectedId
+      userGroupId:groupSelectedId,
+      groupName: ""
     }
+    const fetchMessages = await UserGroupRecords.fetchList();
+      console.log("cyd fetchMessages")
+      console.log(fetchMessages)
+      fetchMessages.forEach((item) => {
+          console.log(item)
+          if (item.attrs != undefined){
+            if (item.attrs.id == groupSelectedId){
+                attributes.groupName = item.attrs.name
+            }
+          }
+      })
     console.log(attributes)
     const message = new Message(attributes);
     await message.save()
@@ -81,13 +93,15 @@ class MessageList extends Component {
               this.state.messageList.push({
                   from: item.attrs.from,
                   content: item.attrs.content,
-                  userGroupId: item.attrs.userGroupId
+                  userGroupId: item.attrs.userGroupId,
+                  groupName: item.attrs.groupName
               })
             }else {//密文数据
               this.state.messageList.push({
                   from: item.attrs.from.cipherText,
                   content: item.attrs.content.cipherText,
-                  userGroupId:item.attrs.userGroupId
+                  userGroupId:item.attrs.userGroupId,
+                  groupName: item.attrs.groupName
               })
             }
           }
@@ -149,8 +163,11 @@ class MessageList extends Component {
               return(
                 <Card key = {i} className={classes.root}>
                   <CardContent>
+                    <Typography>
+                     用户组： {message.groupName}
+                    </Typography>
                     <Typography color="textSecondary" gutterBottom>
-                      {message.from}
+                     用户： {message.from}
                     </Typography>
                     <Typography variant="h5" component="h2">
                       {message.content}
